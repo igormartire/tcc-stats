@@ -1,0 +1,8 @@
+*.arff
+venv
+__pycache__/
+*.csv
+.DS_Store
+*.pyc
+cda.py
+*.xlsx
