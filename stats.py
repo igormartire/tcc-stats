@@ -20,15 +20,18 @@ def main():
     w = csv.DictWriter(sys.stdout, [])
     print_header = True
     for arff_file_path in arff_files_paths:
+        dataset_name = arff_file_path[10:-17]
+        output_stats = {
+            'Dataset': dataset_name
+        }
         dataset = arff.load(arff_file_path)
         dataset_stats = DatasetStats(dataset).get_stats()
-        dataset_name = arff_file_path[10:-17]
-        dataset_stats['Dataset'] = dataset_name
+        output_stats.update(dataset_stats)
         if print_header:
-            w = csv.DictWriter(sys.stdout, dataset_stats.keys())
+            w = csv.DictWriter(sys.stdout, output_stats.keys())
             w.writeheader()
             print_header = False
-        w.writerow(dataset_stats)
+        w.writerow(output_stats)
 
 
 class DatasetStats:
@@ -125,6 +128,8 @@ class DatasetStats:
             '#Inst': self.num_instances,
             '#Pos': self.num_positive_instances,
             '#Neg': self.num_negative_instances,
+            '%Pos': self.num_positive_instances / self.num_instances,
+            '%Neg': self.num_negative_instances / self.num_instances,
             '#Feat': self.num_features,
             '#GO': self.num_go_features,
             '#PPI': self.num_ppi_features,
